@@ -1,0 +1,86 @@
+body {
+  background-color: #ffd7be; 
+  font-family: "Arial", sans-serif;
+  color: #333;
+}
+
+.container{
+    width: 60vw;
+    margin: 0 auto;
+}
+h1,
+h2 {
+  color: #ff5733; 
+  font-weight: bold;
+}
+
+form {
+  background-color: #ffe5d9; 
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ffcbb0;
+  border-radius: 4px;
+}
+
+form button {
+  background-color: #ffcbb0; 
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+form button:hover {
+  background-color: #ffa77e;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  border: 1px solid #ffcbb0;
+  padding: 10px;
+  text-align: left;
+}
+
+table th {
+  background-color: #ffcbb0; /* Header background */
+  color: #333;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #ffe5d9; /* Alternate row color */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  table,
+  form {
+    font-size: 14px;
+  }
+
+  form input,
+  form select {
+    width: 90%;
+  }
+}
