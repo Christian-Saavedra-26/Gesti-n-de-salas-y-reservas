@@ -8,7 +8,7 @@
   <body>
     <h1>Gestión de Salas</h1>
     <form id="sala-form">
-      <label for="sala-nombre">Nombre:</label>
+      <label for="sala-nombre">Nombre de la sala:</label>
       <input type="text" id="sala-nombre" required />
       <label for="sala-capacidad">Capacidad:</label>
       <input type="number" id="sala-capacidad" required />
@@ -24,7 +24,7 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nombre</th>
+          <th>Nombre de la sala</th>
           <th>Capacidad</th>
           <th>Estado</th>
         </tr>
@@ -40,8 +40,10 @@
       <select id="reserva-sala">
         <option value="">Seleccione una sala</option>
       </select>
-      <label for="reserva-fecha">Fecha:</label>
-      <input type="date" id="reserva-fecha" required />
+      <label for="reserva-fecha">Fecha Inicio:</label>
+      <input type="date" id="reserva-fecha-inicio" required />
+      <label for="reserva-fecha">Fecha Fin:</label>
+      <input type="date" id="reserva-fecha-fin" required /> 
       <button type="submit">Guardar Reserva</button>
     </form>
     <h2>Lista de Reservas</h2>
