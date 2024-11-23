@@ -8,13 +8,24 @@ async function loadSalas() {
     try {
         const response = await fetch(SALAS_API_URL);
         const salas = await response.json();
+        
         const salaList = document.getElementById('sala-list');
         salaList.innerHTML = '';
         salas.forEach(addSalaToTable);
+
+        const reservaSalaSelect = document.getElementById('reserva-sala');
+        reservaSalaSelect.innerHTML = '<option value="">Seleccione una sala</option>';
+        salas.forEach(sala => {
+            const option = document.createElement('option');
+            option.value = sala.id;
+            option.textContent = sala.nombre;
+            reservaSalaSelect.appendChild(option);
+        });
     } catch (error) {
         alert('Error al cargar las salas: ' + error.message);
     }
 }
+
 
 function addSalaToTable(sala) {
     const salaList = document.getElementById('sala-list');
@@ -31,6 +42,52 @@ function addSalaToTable(sala) {
         </td>
     `;
     salaList.appendChild(row);
+}
+async function saveReserva(event) {
+    event.preventDefault();
+
+    const cliente = document.getElementById('reserva-cliente').value;
+    const salaId = document.getElementById('reserva-sala').value;
+    const fechaInicio = document.getElementById('reserva-fecha-inicio').value;
+    const fechaFin = document.getElementById('reserva-fecha-fin').value;
+
+    if (!cliente || !salaId || !fechaInicio || !fechaFin) {
+        alert('Complete todos los campos.');
+        return;
+    }
+
+    const reserva = {
+        nombreReservante: cliente,
+        salaId: parseInt(salaId),
+        fechaInicio,
+        fechaFin
+    };
+
+    try {
+        if (editingReservaID) {
+            const response = await fetch(`${RESERVAS_API_URL}/${editingReservaID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reserva),
+            });
+            if (!response.ok) throw new Error('Error al actualizar la reserva.');
+            alert('Reserva actualizada.');
+            editingReservaID = null;
+        } else {
+            const response = await fetch(RESERVAS_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reserva),
+            });
+            if (!response.ok) throw new Error('Error al crear la reserva.');
+            alert('Reserva creada.');
+        }
+        loadReservas();
+    } catch (error) {
+        alert(error.message);
+    }
+
+    document.getElementById('reserva-form').reset();
 }
 
 async function saveSala(event) {
@@ -123,7 +180,7 @@ function addReservaToTable(reserva) {
 
 
 document.getElementById('sala-form').addEventListener('submit', saveSala);
-document.getElementById('reserva-form').addEventListener('submit',addReservaToTable);
+document.getElementById('reserva-form').addEventListener('submit', saveReserva);
 
 loadSalas();
 loadReservas();
