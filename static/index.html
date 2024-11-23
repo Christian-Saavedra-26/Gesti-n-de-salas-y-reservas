@@ -35,6 +35,7 @@
     <h1>Gestión de Reservas</h1>
     <form id="reserva-form">
       <label for="reserva-id">ID</label>
+
       <label for="reserva-cliente">Cliente:</label>
       <input type="text" id="reserva-cliente" required />
       <select id="reserva-sala">
@@ -50,10 +51,11 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
+          <th>Numero de la Reserva</th>
           <th>Cliente</th>
-          <th>Sala</th>
-          <th>Fecha</th>
+          <th>ID de la Sala</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
         </tr>
       </thead>
       <tbody id="reserva-list"></tbody>

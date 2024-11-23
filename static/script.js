@@ -43,52 +43,6 @@ function addSalaToTable(sala) {
     `;
     salaList.appendChild(row);
 }
-async function saveReserva(event) {
-    event.preventDefault();
-
-    const cliente = document.getElementById('reserva-cliente').value;
-    const salaId = document.getElementById('reserva-sala').value;
-    const fechaInicio = document.getElementById('reserva-fecha-inicio').value;
-    const fechaFin = document.getElementById('reserva-fecha-fin').value;
-
-    if (!cliente || !salaId || !fechaInicio || !fechaFin) {
-        alert('Complete todos los campos.');
-        return;
-    }
-
-    const reserva = {
-        nombreReservante: cliente,
-        salaId: parseInt(salaId),
-        fechaInicio,
-        fechaFin
-    };
-
-    try {
-        if (editingReservaID) {
-            const response = await fetch(`${RESERVAS_API_URL}/${editingReservaID}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reserva),
-            });
-            if (!response.ok) throw new Error('Error al actualizar la reserva.');
-            alert('Reserva actualizada.');
-            editingReservaID = null;
-        } else {
-            const response = await fetch(RESERVAS_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reserva),
-            });
-            if (!response.ok) throw new Error('Error al crear la reserva.');
-            alert('Reserva creada.');
-        }
-        loadReservas();
-    } catch (error) {
-        alert(error.message);
-    }
-
-    document.getElementById('reserva-form').reset();
-}
 
 async function saveSala(event) {
     event.preventDefault();
@@ -160,16 +114,62 @@ async function loadReservas() {
         alert('Error al cargar las reservas: ' + error.message);
     }
 }
+async function saveReserva(event) {
+    event.preventDefault();
 
+    const cliente = document.getElementById('reserva-cliente').value;
+    const salaId = document.getElementById('reserva-sala').value;
+    const fechaInicio = document.getElementById('reserva-fecha-inicio').value;
+    const fechaFin = document.getElementById('reserva-fecha-fin').value;
+
+    if (!cliente || !salaId || !fechaInicio || !fechaFin) {
+        alert('Complete todos los campos.');
+        return;
+    }
+
+    const reserva = {
+        nombreReservante: cliente,
+        salaId: parseInt(salaId),
+        fechaInicio,
+        fechaFin
+    };
+
+    try {
+        if (editingReservaID) {
+            const response = await fetch(`${RESERVAS_API_URL}/${editingReservaID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reserva),
+            });
+            if (!response.ok) throw new Error('Error al actualizar la reserva.');
+            alert('Reserva actualizada.');
+            editingReservaID = null;
+        } else {
+            const response = await fetch(RESERVAS_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reserva),
+            });
+            if (!response.ok) throw new Error('Error al crear la reserva.');
+            alert('Reserva creada.');
+        }
+        loadReservas();
+    } catch (error) {
+        alert(error.message);
+    }
+
+    document.getElementById('reserva-form').reset();
+}
 function addReservaToTable(reserva) {
     const reservaList = document.getElementById('reserva-list');
     const row = document.createElement('tr');
     row.setAttribute('data-id', reserva.id);
     row.innerHTML = `
         <td>${reserva.id}</td>
-        <td>${reserva.cliente}</td>
-        <td>${reserva.sala}</td>
-        <td>${reserva.fecha}</td>
+        <td>${reserva.nombreReservante}</td>
+        <td>${reserva.salaId}</td>
+        <td>${reserva.fechaInicio}</td>
+        <td>${reserva.fechaFin}</td>
         <td>
             <button onclick="editarReserva(${reserva.id})">Editar</button>
             <button onclick="deleteReserva(${reserva.id})">Eliminar</button>
@@ -178,6 +178,26 @@ function addReservaToTable(reserva) {
     reservaList.appendChild(row);
 }
 
+function editarReserva(id) {
+    const row = document.querySelector(`#reserva-list tr[data-id="${id}"]`);
+    document.getElementById('reserva-cliente').value = row.children[1].textContent;
+    document.getElementById('reserva-sala').value = row.children[2].textContent;
+    document.getElementById('reserva-fecha-inicio').value = row.children[3].textContent;
+    document.getElementById('reserva-fecha-fin').value = row.children[4].textContent;
+    editingReservaID = id;
+}
+
+async function deleteReserva(id) {
+    if (!confirm('¿Seguro que deseas eliminar esta reserva?')) return;
+    try {
+        const response = await fetch(`${RESERVAS_API_URL}/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Error al eliminar la reserva.');
+        alert('reserva eliminada.');
+        loadReservas();
+    } catch (error) {
+        alert(error.message);
+    }
+}
 
 document.getElementById('sala-form').addEventListener('submit', saveSala);
 document.getElementById('reserva-form').addEventListener('submit', saveReserva);
